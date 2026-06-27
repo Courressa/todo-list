@@ -3,8 +3,8 @@ import './App.css'
 function App() {
   const todoList = [
     {id: 1, title: "wash the car"},
-    {id: 1, title: "fold laundry"},
-    {id: 1, title: "eat strawberry cake"}
+    {id: 2, title: "fold laundry"},
+    {id: 3, title: "eat strawberry cake"}
   ];
 
   return (
