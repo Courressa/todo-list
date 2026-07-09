@@ -1,4 +1,4 @@
-const TodoList = () => {
+function TodoList() {
     const todoList = [
         {id: 1, title: "wash the car"},
         {id: 2, title: "fold laundry"},

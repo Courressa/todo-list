@@ -1,4 +1,4 @@
-const TodoForm = () => {
+function TodoForm() {
     return (
         <form>
             <label htmlFor="todoTitle">Todo</label>
