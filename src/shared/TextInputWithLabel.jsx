@@ -1,8 +1,8 @@
 export default function TextInputWithLabel({
     elementId,
-    ref, 
-    onChange, 
     labelText,
+    onChange, 
+    ref,
     value
 }) {
   return (

@@ -35,11 +35,11 @@ function TodoListItem({todo, onCompleteTodo, onUpdateTodo}) {
         { isEditing ? (
           <>
             <TextInputWithLabel
+              elementId={"todoTitle"}
+              labelText={"Editing"}
+              onChange={handleEdit}
               ref={inputRef}
               value={workingTitle}
-              onChange={handleEdit}
-              elementId={"todoTitle"}
-              labelText={""}
             />
             <button type="button" onClick={handleCancel}>Cancel</button>
             <button
