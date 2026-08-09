@@ -9,7 +9,8 @@ function TodoListItem({todo, onCompleteTodo, onUpdateTodo}) {
     startEditing,
     cancelEdit,
     updateTitle,
-    finishEdit} = useEditableTitle(todo.title);
+    finishEdit,
+    inputRef} = useEditableTitle(todo.title);
 
   const handleUpdate = (event) => {
     if (!isEditing) return;
@@ -24,7 +25,13 @@ function TodoListItem({todo, onCompleteTodo, onUpdateTodo}) {
       <form onSubmit={handleUpdate}>
         { isEditing ? (
           <>
-            <TextInputWithLabel value={workingTitle} onChange={(event) => updateTitle(event.target.value)} />
+            <TextInputWithLabel
+              ref={inputRef}
+              value={workingTitle}
+              onChange={(event) => updateTitle(event.target.value)}
+              elementId={"todoTitle"}
+              labelText={""}
+            />
             <button type="button" onClick={cancelEdit}>Cancel</button>
             <button type="button" onClick={handleUpdate} disabled={!isValidTodoTitle(workingTitle)}>Update</button>
           </>

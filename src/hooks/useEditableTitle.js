@@ -1,8 +1,15 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 export function useEditableTitle(initialTitle) {
+  const inputRef = useRef();
   const [isEditing, setIsEditing] = useState(false);
   const [workingTitle, setWorkingTitle] = useState(initialTitle);
+
+  useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isEditing]);
 
   const startEditing = () => {
     setWorkingTitle(initialTitle);
@@ -29,6 +36,7 @@ export function useEditableTitle(initialTitle) {
     startEditing,
     cancelEdit,
     updateTitle,
-    finishEdit
+    finishEdit,
+    inputRef
   };
 }
