@@ -21,8 +21,8 @@ function TodoListItem({todo, onCompleteTodo, onUpdateTodo}) {
   };
 
   const handleUpdate = (event) => {
-    event.preventDefault();
     if (!isEditing) return;
+    event.preventDefault();
     if (!isValidTodoTitle(workingTitle)) return;
 
     const finalTitle = finishEdit();
@@ -36,7 +36,7 @@ function TodoListItem({todo, onCompleteTodo, onUpdateTodo}) {
           <>
             <TextInputWithLabel
               elementId={"todoTitle"}
-              labelText={"Editing"}
+              labelText={"Todo"}
               onChange={handleEdit}
               ref={inputRef}
               value={workingTitle}
