@@ -87,6 +87,7 @@ export default function TodosPage({ token }) {
     };
 
     const completeTodo = async (id) => {
+        // Store the original todo before making changes (for potential rollback)
         const originalTodo = todoList.find(todo => todo.id === id);
 
         // Optimistically update the todo as completed in state
@@ -124,17 +125,49 @@ export default function TodosPage({ token }) {
         
     };
 
-    const updateTodo = (editedTodo) => {
-        const updatedTodos = todoList.map(todo => {
-            if (todo.id === editedTodo.id) {
-                return {...editedTodo};
+    const updateTodo = async (editedTodo) => {
+        // Store the original todo for rollback
+        const originalTodo = todoList.find(todo => todo.id === editedTodo.id);
+
+        // Optimistically apply the edited todo to state
+        setTodoList(previous => 
+            previous.map(todo => {
+                if (todo.id === editedTodo.id) {
+                    return {...editedTodo};
+                }
+
+                return todo;
+            })
+        );
+
+        try {
+            const response = await fetch(`/api/tasks/${editedTodo.id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': token,
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    title: editedTodo.title,
+                    isCompleted: editedTodo.isCompleted,
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to update todo");
             }
-
-            return todo;
-        });
-
-        setTodoList(updatedTodos);
+        } catch (err) {
+            // On failure: rollback to the original todo and set error message
+            setTodoList(previous => 
+                previous.map(todo => {
+                    return todo.id === editedTodo.id ? originalTodo : todo;
+                }
+            ));
+            setError(err.message || "There was an issue with updating the todo");
+        }
     };
+
     return (
         <div>
             <TodoForm onAddTodo={addTodo} />
