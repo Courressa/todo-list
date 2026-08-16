@@ -69,7 +69,6 @@ export default function TodosPage({ token }) {
 
             // On success: replace the temporary todo with the real todo from the server response
             const realTodo = await response.json();
-            console.log("DATA: ", realTodo);
 
             setTodoList(previous =>
                 previous.map(todo => 
@@ -170,6 +169,15 @@ export default function TodosPage({ token }) {
 
     return (
         <div>
+            {
+                error ? 
+                <div>
+                    {error}
+                    <button onClick={setError("")}>Clear Error</button>
+                </div> :
+                ""
+            }
+            {isTodoListLoading ? <p>Loading...</p> : ""}
             <TodoForm onAddTodo={addTodo} />
             <TodoList
                 todoList={todoList}
