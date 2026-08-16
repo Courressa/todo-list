@@ -68,11 +68,11 @@ export default function TodosPage({ token }) {
             }
 
             // On success: replace the temporary todo with the real todo from the server response
-            const data = await response.json();
-            const realTodo = data.task;
+            const realTodo = await response.json();
+            console.log("DATA: ", realTodo);
 
             setTodoList(previous =>
-                previous.map(todo =>
+                previous.map(todo => 
                     todo.id === newTodo.id ? realTodo : todo
                 )
             );
@@ -116,10 +116,10 @@ export default function TodosPage({ token }) {
         } catch (err) {
             // On failure: rollback to the original todo and set error message
             setTodoList(previous => 
-                previous.map(todo => {
-                    return todo.id === id ? originalTodo : todo;
-                }
-            ));
+                previous.map(todo => 
+                    todo.id === id ? originalTodo : todo
+                )
+            );
             setError(err.message || "There was an issue marking the todo as completed");
         }
         
@@ -160,10 +160,10 @@ export default function TodosPage({ token }) {
         } catch (err) {
             // On failure: rollback to the original todo and set error message
             setTodoList(previous => 
-                previous.map(todo => {
-                    return todo.id === editedTodo.id ? originalTodo : todo;
-                }
-            ));
+                previous.map(todo => 
+                    todo.id === editedTodo.id ? originalTodo : todo
+                )
+            );
             setError(err.message || "There was an issue with updating the todo");
         }
     };
