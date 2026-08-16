@@ -9,6 +9,7 @@ export default function TodosPage({ token }) {
 
     useEffect(() => {
         const fetchTodos = async () => {
+            setError("");
             try {
                 setIsTodoListLoading(true);
                 const params = new URLSearchParams({
@@ -43,6 +44,7 @@ export default function TodosPage({ token }) {
     }, [token]);
 
     const addTodo = async (todoTitle) => {
+        setError("");
         // Temporary todo
         const newTodo = {id: Date.now(), title: todoTitle, isCompleted: false };
 
@@ -86,6 +88,7 @@ export default function TodosPage({ token }) {
     };
 
     const completeTodo = async (id) => {
+        setError("");
         // Store the original todo before making changes (for potential rollback)
         const originalTodo = todoList.find(todo => todo.id === id);
 
@@ -125,6 +128,7 @@ export default function TodosPage({ token }) {
     };
 
     const updateTodo = async (editedTodo) => {
+        setError("");
         // Store the original todo for rollback
         const originalTodo = todoList.find(todo => todo.id === editedTodo.id);
 

@@ -6,8 +6,11 @@ export default function Logon({ onSetEmail, onSetToken }) {
     const [authError, setAuthError] = useState("");
     const [isLoggingOn, setIsLoggingOn] = useState(false);
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
+        setIsLoggingOn(true);
+        setAuthError("");
+
         try{ 
             const response = await fetch('/api/users/logon', {
                 method: 'POST',
@@ -32,9 +35,11 @@ export default function Logon({ onSetEmail, onSetToken }) {
     }
     return (
         <form onSubmit={handleSubmit}>
-            {
-                authError ?? ""
-            }
+            {authError && (
+                <div>
+                    {authError}
+                </div>
+            )}
             <label htmlFor="email">Email</label>
             <input
                 id="email"
@@ -53,8 +58,7 @@ export default function Logon({ onSetEmail, onSetToken }) {
             />
 
             <button 
-                type="button"
-                onClick={handleSubmit}
+                type="submit"
                 disabled={isLoggingOn}
             >
                 {
