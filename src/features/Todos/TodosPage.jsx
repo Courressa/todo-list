@@ -31,7 +31,7 @@ export default function TodosPage({ token }) {
                 const data = await response.json();
                 setTodoList(data.tasks);
             } catch (err) {
-                setError(err);
+                setError(err.message || "There was an issue with you're request");
             } finally {
                 setIsTodoListLoading(false);
             }
@@ -169,15 +169,13 @@ export default function TodosPage({ token }) {
 
     return (
         <div>
-            {
-                error ? 
+            {error && (
                 <div>
-                    {error}
-                    <button onClick={setError("")}>Clear Error</button>
-                </div> :
-                ""
-            }
-            {isTodoListLoading ? <p>Loading...</p> : ""}
+                    <p>{typeof error === "string" ? error : error.message}</p>
+                    <button onClick={() => setError("")}>Clear Error</button>
+                </div>
+            )}
+            {isTodoListLoading && <p>Loading...</p>}
             <TodoForm onAddTodo={addTodo} />
             <TodoList
                 todoList={todoList}
