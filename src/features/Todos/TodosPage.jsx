@@ -91,10 +91,10 @@ export default function TodosPage({ token }) {
 
         // Optimistically update the todo as completed in state
         setTodoList(previous => 
-            previous.map(todo => {
-                return todo.id === id ? { ...todo, isCompleted: true } : todo;
-            }
-        ));
+            previous.map(todo =>
+                todo.id === id ? { ...todo, isCompleted: true } : todo
+            )
+        );
 
         try {
             const response = await fetch(`/api/tasks/${id}`, {
