@@ -30,7 +30,6 @@ export default function TodosPage() {
     };
     return (
         <div>
-            <h1>Todo List</h1>
             <TodoForm onAddTodo={addTodo} />
             <TodoList
                 todoList={todoList}
