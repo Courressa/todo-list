@@ -68,7 +68,8 @@ export default function TodosPage({ token }) {
             }
 
             // On success: replace the temporary todo with the real todo from the server response
-            const realTodo = await response.json();
+            const data = await response.json();
+            const realTodo = data.task;
 
             setTodoList(previous =>
                 previous.map(todo =>
@@ -85,10 +86,42 @@ export default function TodosPage({ token }) {
         
     };
 
-    const completeTodo = (id) => {
-        setTodoList(todoList.map(todo => {
-            return todo.id === id ? { ...todo, isCompleted: true } : todo;
-        }));
+    const completeTodo = async (id) => {
+        const originalTodo = todoList.find(todo => todo.id === id);
+
+        // Optimistically update the todo as completed in state
+        setTodoList(previous => 
+            previous.map(todo => {
+                return todo.id === id ? { ...todo, isCompleted: true } : todo;
+            }
+        ));
+
+        try {
+            const response = await fetch(`/api/tasks/${id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': token,
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    isCompleted: true
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to mark as completed");
+            }
+        } catch (err) {
+            // On failure: rollback to the original todo and set error message
+            setTodoList(previous => 
+                previous.map(todo => {
+                    return todo.id === id ? originalTodo : todo;
+                }
+            ));
+            setError(err.message || "There was an issue marking the todo as completed");
+        }
+        
     };
 
     const updateTodo = (editedTodo) => {
