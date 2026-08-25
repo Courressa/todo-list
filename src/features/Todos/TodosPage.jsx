@@ -98,12 +98,12 @@ export default function TodosPage({ token }) {
 
             // On success: replace the temporary todo with the real todo from the server response
             const realTodo = await response.json();
-            invalidateCache();
             setTodoList(previous =>
                 previous.map(todo => 
                     todo.id === newTodo.id ? realTodo : todo
                 )
             );
+            invalidateCache();
         } catch (err) {
             // On failure: remove the failed todo from the list and set an error message
             setTodoList(previous =>
