@@ -220,7 +220,7 @@ export default function TodosPage({ token }) {
                         setFilterError("")
                     }}
                     >
-                        Reset Filter
+                        Reset Filters
                     </button>
                 </div>
             )}
