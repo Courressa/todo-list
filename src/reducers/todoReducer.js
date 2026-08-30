@@ -24,7 +24,8 @@ export const TODO_ACTIONS = {
   SET_SORT: 'SET_SORT',
   SET_FILTER: 'SET_FILTER',
   CLEAR_ERROR: 'CLEAR_ERROR',
-  RESET_FILTERS: 'RESET_FILTERS'
+  RESET_FILTERS: 'RESET_FILTERS',
+  SET_DATA_VERSION: 'SET_DATA_VERSION',
 };
 
 export const initialTodoState = {
@@ -62,13 +63,13 @@ export function todoReducer(state, action) {
             return {
                 ...state,
                 isTodoListLoading: false,
-                filterError: action.payload,
+                filterError: `Error filtering/sorting todos: ${action.payload}`,
             };
         }
         return {
             ...state,
             isTodoListLoading: false,
-            error: action.payload,
+            error: `Error fetching todos: ${action.payload}`,
         };
 
     case TODO_ACTIONS.ADD_TODO_START:
@@ -91,7 +92,7 @@ export function todoReducer(state, action) {
         return {
             ...state,
             todoList: state.todoList.filter(todo => todo.id !== action.payload.newTodoId),
-            error: action.payload.message,
+            error: action.payload.message || "There was an issue adding the todo",
         }
 
     case TODO_ACTIONS.UPDATE_TODO_START:
@@ -172,7 +173,12 @@ export function todoReducer(state, action) {
             sortDirection: 'asc',
             filterTerm: '',
         }
-
+        
+    case TODO_ACTIONS.SET_DATA_VERSION:
+        return {
+            ...state,
+            dataVersion: action.payload,
+        };
     default:
       throw new Error(`Unknown action type: ${action.type}`);
   }

@@ -1,4 +1,9 @@
-import { useState, useEffect, useCallback    } from "react";
+import { useState, useEffect, useCallback, useReducer } from "react";
+import {
+  todoReducer,
+  initialTodoState,
+  TODO_ACTIONS,
+} from '../../reducers/todoReducer';
 import TodoForm from "./TodoForm";
 import TodoList from "./TodoList/TodoList";
 import SortBy from "../../shared/SortBy";
@@ -6,14 +11,17 @@ import useDebounce from "../../utils/useDebounce";
 import FilterInput from "../../shared/FilterInput";
 
 export default function TodosPage({ token }) {
-    const [todoList, setTodoList] = useState([]);
-    const [error, setError] = useState("");
-    const [isTodoListLoading, setIsTodoListLoading] = useState(false);
-    const [sortBy, setSortBy] = useState("createdAt");
-    const [sortDirection, setSortDirection] = useState("desc");
-    const [filterTerm, setFilterTerm] = useState("");
-    const [dataVersion, setDataVersion] = useState(0);
-    const [filterError, setFilterError] = useState("");
+    const [state, dispatch] = useReducer(todoReducer, initialTodoState);
+    const {
+        todoList,
+        error,
+        filterError,
+        isTodoListLoading,
+        sortBy,
+        sortDirection,
+        filterTerm,
+        dataVersion,
+    } = state;
     const debouncedFilterTerm = useDebounce(filterTerm, 300);
 
     const handleFilterChange = (newTerm) => { setFilterTerm(newTerm); };
@@ -24,9 +32,8 @@ export default function TodosPage({ token }) {
 
     useEffect(() => {
         const fetchTodos = async () => {
-            setError("");
             try {
-                setIsTodoListLoading(true);
+                dispatch({ type: TODO_ACTIONS.FETCH_START });
                 const paramsObject = {
                     sortBy,
                     sortDirection,
@@ -52,16 +59,9 @@ export default function TodosPage({ token }) {
                 }
 
                 const data = await response.json();
-                setTodoList(data.tasks);
-                setFilterError('');
+                dispatch({ type: TODO_ACTIONS.FETCH_SUCCESS, payload: data.tasks });
             } catch (error) {
-                if (debouncedFilterTerm || sortBy !== 'createdAt' || sortDirection !== 'desc') {
-                    setFilterError(`Error filtering/sorting todos: ${error.message}`);
-                } else {
-                    setError(`Error fetching todos: ${error.message}`);
-                }
-            } finally {
-                setIsTodoListLoading(false);
+                dispatch({ type: TODO_ACTIONS.FETCH_ERROR, payload: error.message });
             }
         }
 
@@ -71,12 +71,11 @@ export default function TodosPage({ token }) {
     }, [token, sortBy, sortDirection, debouncedFilterTerm]);
 
     const addTodo = async (todoTitle) => {
-        setError("");
         // Temporary todo
         const newTodo = {id: Date.now(), title: todoTitle, isCompleted: false };
 
         // Obtimistically update the UI immediately
-        setTodoList(previous => [...previous, newTodo]);
+        dispatch({ type: TODO_ACTIONS.ADD_TODO_START, payload: newTodo });
 
         try {
             const response = await fetch(`/api/tasks`, {
@@ -98,18 +97,12 @@ export default function TodosPage({ token }) {
 
             // On success: replace the temporary todo with the real todo from the server response
             const realTodo = await response.json();
-            setTodoList(previous =>
-                previous.map(todo => 
-                    todo.id === newTodo.id ? realTodo : todo
-                )
-            );
+
+            dispatch({ type: TODO_ACTIONS.ADD_TODO_SUCCESS, payload: {newTodoId: newTodo.id, realTodo} });
             invalidateCache();
         } catch (err) {
             // On failure: remove the failed todo from the list and set an error message
-            setTodoList(previous =>
-                previous.filter(todo => todo.id !== newTodo.id)
-            );
-            setError(err.message || "There was an issue adding the todo");
+            dispatch({ type: TODO_ACTIONS.ADD_TODO_ERROR, payload: {newTodoId: newTodo.id, message: err.message} });
         }
         
     };
