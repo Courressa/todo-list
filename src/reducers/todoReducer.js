@@ -58,6 +58,13 @@ export function todoReducer(state, action) {
         };
 
     case TODO_ACTIONS.FETCH_ERROR:
+        if (state.filterTerm || state.sortBy !== 'createdAt' || state.sortDirection !== 'asc') {
+            return {
+                ...state,
+                isTodoListLoading: false,
+                filterError: action.payload,
+            };
+        }
         return {
             ...state,
             isTodoListLoading: false,
@@ -138,6 +145,34 @@ export function todoReducer(state, action) {
                 ),
             error: action.payload.message,
         }
+
+    case TODO_ACTIONS.SET_SORT:
+        return {
+            ...state,
+            [action.payload.field]: action.payload.value,
+        }
+
+    case TODO_ACTIONS.SET_FILTER:
+        return {
+            ...state,
+            filterTerm: action.payload
+        }
+
+    case TODO_ACTIONS.CLEAR_ERROR:
+        return {
+            ...state,
+            [action.payload]: '',
+        }
+    
+    case TODO_ACTIONS.RESET_FILTERS:
+        return {
+            ...state,
+            filterError: '',
+            sortBy: 'createdAt',
+            sortDirection: 'asc',
+            filterTerm: '',
+        }
+
     default:
       throw new Error(`Unknown action type: ${action.type}`);
   }
