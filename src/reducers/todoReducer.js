@@ -12,12 +12,10 @@ export const TODO_ACTIONS = {
 
   // Update todo operations
   UPDATE_TODO_START: 'UPDATE_TODO_START',
-  UPDATE_TODO_SUCCESS: 'UPDATE_TODO_SUCCESS',
   UPDATE_TODO_ERROR: 'UPDATE_TODO_ERROR',
 
   // Complete todo operations
   COMPLETE_TODO_START: 'COMPLETE_TODO_START',
-  COMPLETE_TODO_SUCCESS: 'COMPLETE_TODO_SUCCESS',
   COMPLETE_TODO_ERROR: 'COMPLETE_TODO_ERROR',
 
   // UI Operation
@@ -108,19 +106,13 @@ export function todoReducer(state, action) {
             error: '',
         }
 
-    case TODO_ACTIONS.UPDATE_TODO_SUCCESS:
-        return {
-            ...state,
-            error: '',
-        }
-
     case TODO_ACTIONS.UPDATE_TODO_ERROR:
         return {
             ...state,
             todoList: state.todoList.map(todo => 
-                    todo.id === action.payload.editedTodo.id ? action.payload.originalTodo : todo
+                    todo.id === action.payload.editedTodoId ? action.payload.originalTodo : todo
                 ),
-            error: action.payload.message,
+            error: action.payload.message || "There was an issue with updating the todo",
         }
     
     case TODO_ACTIONS.COMPLETE_TODO_START:
@@ -132,19 +124,13 @@ export function todoReducer(state, action) {
             error: '',
         }
 
-    case TODO_ACTIONS.COMPLETE_TODO_SUCCESS:
-        return {
-            ...state,
-            error: '',
-        }
-
     case TODO_ACTIONS.COMPLETE_TODO_ERROR:
         return {
             ...state,
             todoList: state.todoList.map(todo => 
                     todo.id === action.payload.id ? action.payload.originalTodo : todo
                 ),
-            error: action.payload.message,
+            error: action.payload.message || "There was an issue marking the todo as completed",
         }
 
     case TODO_ACTIONS.SET_SORT:
@@ -177,7 +163,7 @@ export function todoReducer(state, action) {
     case TODO_ACTIONS.SET_DATA_VERSION:
         return {
             ...state,
-            dataVersion: action.payload,
+            dataVersion: state.dataVersion + 1,
         };
     default:
       throw new Error(`Unknown action type: ${action.type}`);
