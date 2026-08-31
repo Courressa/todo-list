@@ -4,13 +4,15 @@ import {
   initialTodoState,
   TODO_ACTIONS,
 } from '../../reducers/todoReducer';
+import { useAuth } from "../../contexts/AuthContext";
 import TodoForm from "./TodoForm";
 import TodoList from "./TodoList/TodoList";
 import SortBy from "../../shared/SortBy";
 import useDebounce from "../../utils/useDebounce";
 import FilterInput from "../../shared/FilterInput";
 
-export default function TodosPage({ token }) {
+export default function TodosPage() {
+    const { token } = useAuth();
     const [state, dispatch] = useReducer(todoReducer, initialTodoState);
     const {
         todoList,
