@@ -61,14 +61,29 @@ export function AuthProvider({ children }) {
         try {
             const options = {
                 method: 'POST',
-                headers: { 'CSRF-Token': token },
+                headers: { 'X-CSRF-TOKEN': token },
                 credentials: 'include',
             };
 
-            const res = await fetch('/api/user/logoff', options);
-            const data = await res.json();
+            const res = await fetch('/api/users/logoff', options);
+
+            // Body may be empty on logoff, so don't assume it's valid JSON
+            let data = {};
+            try {
+                data = await res.json();
+            } catch {
+                // No JSON body to parse, ignore
+            }
 
             if (res.status === 200) {
+                // Success: clear local state, same pattern as login
+                setEmail('');
+                setToken('');
+                return { success: true };
+            } else if (res.status === 401) {
+                // Server has no active session either, treat as already logged out
+                setEmail('');
+                setToken('');
                 return { success: true };
             } else {
                 return {
@@ -81,10 +96,6 @@ export function AuthProvider({ children }) {
                 success: false,
                 error: 'Network error during logout',
             };
-        } finally {
-            // Clear local state regardless of server response
-            setEmail('');
-            setToken('');
         }
     };
     

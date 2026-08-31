@@ -97,7 +97,6 @@ export default function TodosPage() {
             const realTodo = await response.json();
 
             dispatch({ type: TODO_ACTIONS.ADD_TODO_SUCCESS, payload: {newTodoId: newTodo.id, realTodo} });
-            dispatch({ type: TODO_ACTIONS.SET_DATA_VERSION });
         } catch (err) {
             // On failure: remove the failed todo from the list and set an error message
             dispatch({ type: TODO_ACTIONS.ADD_TODO_ERROR, payload: {newTodoId: newTodo.id, message: err.message} });
@@ -128,7 +127,7 @@ export default function TodosPage() {
             if (!response.ok) {
                 throw new Error("Failed to mark as completed");
             }
-            dispatch({ type: TODO_ACTIONS.SET_DATA_VERSION });
+            dispatch({ type: TODO_ACTIONS.COMPLETE_TODO_SUCCESS });
         } catch (err) {
             // On failure: rollback to the original todo and set error message
             dispatch({ type: TODO_ACTIONS.COMPLETE_TODO_ERROR, payload: { id, originalTodo, message: err.message } });
@@ -158,7 +157,7 @@ export default function TodosPage() {
             if (!response.ok) {
                 throw new Error("Failed to update todo");
             }
-            dispatch({ type: TODO_ACTIONS.SET_DATA_VERSION });
+            dispatch({ type: TODO_ACTIONS.UPDATE_TODO_SUCCESS });
         } catch (err) {
             // On failure: rollback to the original todo and set error message
             dispatch({ type: TODO_ACTIONS.UPDATE_TODO_ERROR, payload: { editedTodoId: editedTodo.id, originalTodo, message: err.message } });

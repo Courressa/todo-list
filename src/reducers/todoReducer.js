@@ -12,10 +12,12 @@ export const TODO_ACTIONS = {
 
     // Update todo operations
     UPDATE_TODO_START: 'UPDATE_TODO_START',
+    UPDATE_TODO_SUCCESS: 'UPDATE_TODO_SUCCESS',
     UPDATE_TODO_ERROR: 'UPDATE_TODO_ERROR',
 
     // Complete todo operations
     COMPLETE_TODO_START: 'COMPLETE_TODO_START',
+    COMPLETE_TODO_SUCCESS: 'COMPLETE_TODO_SUCCESS',
     COMPLETE_TODO_ERROR: 'COMPLETE_TODO_ERROR',
 
     // UI Operation
@@ -23,7 +25,6 @@ export const TODO_ACTIONS = {
     SET_FILTER: 'SET_FILTER',
     CLEAR_ERROR: 'CLEAR_ERROR',
     RESET_FILTERS: 'RESET_FILTERS',
-    SET_DATA_VERSION: 'SET_DATA_VERSION',
 };
 
 export const initialTodoState = {
@@ -84,6 +85,7 @@ export function todoReducer(state, action) {
                         todo.id === action.payload.newTodoId ? action.payload.realTodo : todo
                     ),
                 error: '',
+                dataVersion: state.dataVersion + 1,
             }
 
         case TODO_ACTIONS.ADD_TODO_ERROR:
@@ -106,6 +108,13 @@ export function todoReducer(state, action) {
                 error: '',
             }
 
+        case TODO_ACTIONS.UPDATE_TODO_SUCCESS:
+            return {
+                ...state,
+                error: '',
+                dataVersion: state.dataVersion + 1,
+            }
+
         case TODO_ACTIONS.UPDATE_TODO_ERROR:
             return {
                 ...state,
@@ -122,6 +131,13 @@ export function todoReducer(state, action) {
                     todo.id === action.payload ? { ...todo, isCompleted: true } : todo
                 ),
                 error: '',
+            }
+
+        case TODO_ACTIONS.COMPLETE_TODO_SUCCESS:
+            return {
+                ...state,
+                error: '',
+                dataVersion: state.dataVersion + 1,
             }
 
         case TODO_ACTIONS.COMPLETE_TODO_ERROR:
@@ -159,12 +175,7 @@ export function todoReducer(state, action) {
                 sortDirection: 'asc',
                 filterTerm: '',
             }
-            
-        case TODO_ACTIONS.SET_DATA_VERSION:
-            return {
-                ...state,
-                dataVersion: state.dataVersion + 1,
-            };
+
         default:
         throw new Error(`Unknown action type: ${action.type}`);
     }
