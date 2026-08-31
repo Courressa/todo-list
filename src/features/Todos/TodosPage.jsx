@@ -128,7 +128,10 @@ export default function TodosPage() {
             if (!response.ok) {
                 throw new Error("Failed to mark as completed");
             }
-            dispatch({ type: TODO_ACTIONS.COMPLETE_TODO_SUCCESS });
+
+            // On success: reconcile the optimistic state with the server's version of the todo
+            const updatedTodo = await response.json();
+            dispatch({ type: TODO_ACTIONS.COMPLETE_TODO_SUCCESS, payload: { id, updatedTodo } });
         } catch (err) {
             // On failure: rollback to the original todo and set error message
             dispatch({ type: TODO_ACTIONS.COMPLETE_TODO_ERROR, payload: { id, originalTodo, message: err.message } });
@@ -158,7 +161,10 @@ export default function TodosPage() {
             if (!response.ok) {
                 throw new Error("Failed to update todo");
             }
-            dispatch({ type: TODO_ACTIONS.UPDATE_TODO_SUCCESS });
+
+            // On success: reconcile the optimistic state with the server's version of the todo
+            const updatedTodo = await response.json();
+            dispatch({ type: TODO_ACTIONS.UPDATE_TODO_SUCCESS, payload: { editedTodoId: editedTodo.id, updatedTodo } });
         } catch (err) {
             // On failure: rollback to the original todo and set error message
             dispatch({ type: TODO_ACTIONS.UPDATE_TODO_ERROR, payload: { editedTodoId: editedTodo.id, originalTodo, message: err.message } });
