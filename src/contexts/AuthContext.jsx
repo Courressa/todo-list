@@ -76,14 +76,6 @@ export function AuthProvider({ children }) {
             }
 
             if (res.status === 200) {
-                // Success: clear local state, same pattern as login
-                setEmail('');
-                setToken('');
-                return { success: true };
-            } else if (res.status === 401) {
-                // Server has no active session either, treat as already logged out
-                setEmail('');
-                setToken('');
                 return { success: true };
             } else {
                 return {
@@ -96,6 +88,10 @@ export function AuthProvider({ children }) {
                 success: false,
                 error: 'Network error during logout',
             };
+        } finally {
+            // Clear local state regardless of server response
+            setEmail('');
+            setToken('');
         }
     };
     

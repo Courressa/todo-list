@@ -58,17 +58,17 @@ export function todoReducer(state, action) {
             };
 
         case TODO_ACTIONS.FETCH_ERROR:
-            if (state.filterTerm || state.sortBy !== 'createdAt' || state.sortDirection !== 'asc') {
+            if (action.payload.isFiltered) {
                 return {
                     ...state,
                     isTodoListLoading: false,
-                    filterError: `Error filtering/sorting todos: ${action.payload}`,
+                    filterError: `Error filtering/sorting todos: ${action.payload.message}`,
                 };
             }
             return {
                 ...state,
                 isTodoListLoading: false,
-                error: `Error fetching todos: ${action.payload}`,
+                error: `Error fetching todos: ${action.payload.message}`,
             };
 
         case TODO_ACTIONS.ADD_TODO_START:

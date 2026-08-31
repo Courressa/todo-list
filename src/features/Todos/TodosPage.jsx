@@ -59,7 +59,8 @@ export default function TodosPage() {
                 const data = await response.json();
                 dispatch({ type: TODO_ACTIONS.FETCH_SUCCESS, payload: data.tasks });
             } catch (error) {
-                dispatch({ type: TODO_ACTIONS.FETCH_ERROR, payload: error.message });
+                const isFiltered = Boolean(debouncedFilterTerm) || sortBy !== 'createdAt' || sortDirection !== 'asc';
+                dispatch({ type: TODO_ACTIONS.FETCH_ERROR, payload: { message: error.message, isFiltered } });
             }
         }
 
