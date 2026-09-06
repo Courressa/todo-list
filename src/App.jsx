@@ -1,22 +1,18 @@
-import { useAuth } from "./contexts/AuthContext";
-import TodosPage from "./features/Todos/TodosPage";
-import Header from "./shared/Header";
+import './App.css';
+import { Routes, Route } from 'react-router';
+import TodosPage from "./pages/TodosPage";
 import Logon from "./features/Logon";
-import './App.css'
+import Header from './shared/Header';
 
 function App() {
-  const { isAuthenticated } = useAuth();
-
   return (
-    <div>
+    <>
       <Header />
-      {
-        !isAuthenticated ?
-        <Logon /> :
-        <TodosPage  />
-      }
-    </div>
-  )
+      <Routes>
+        {/* Routes will go here */}
+      </Routes>
+    </>
+  );
 }
 
-export default App
+export default App;

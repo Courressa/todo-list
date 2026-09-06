@@ -3,13 +3,13 @@ import {
   todoReducer,
   initialTodoState,
   TODO_ACTIONS,
-} from '../../reducers/todoReducer';
-import { useAuth } from "../../contexts/AuthContext";
-import TodoForm from "./TodoForm";
-import TodoList from "./TodoList/TodoList";
-import SortBy from "../../shared/SortBy";
-import useDebounce from "../../utils/useDebounce";
-import FilterInput from "../../shared/FilterInput";
+} from '../reducers/todoReducer';
+import { useAuth } from "../contexts/AuthContext";
+import TodoForm from "../features/Todos/TodoForm";
+import TodoList from "../features/Todos/TodoList/TodoList";
+import SortBy from "../shared/SortBy";
+import useDebounce from "../utils/useDebounce";
+import FilterInput from "../shared/FilterInput";
 
 export default function TodosPage() {
     const { token } = useAuth();
