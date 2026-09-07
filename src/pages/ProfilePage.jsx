@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 
 export default function ProfilePage() {
     const { email, token } = useAuth();
-    const [stats, setStats] = useState({ total: 0, completed: 0, active: 0 });
+    const [todoStats, setTodoStats] = useState({ total: 0, completed: 0, active: 0 });
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
 
@@ -18,28 +18,31 @@ export default function ProfilePage() {
                 setIsLoading(true);
                 setError('');
 
-                const response = await fetch('/api/tasks?limit=100', {
-                    headers: {
-                        'X-CSRF-TOKEN': token,
-                    },
+                const options = {
+                    method: 'GET',
+                    headers: { 'X-CSRF-TOKEN': token },
                     credentials: 'include',
-                });
+                };
 
+                const response = await fetch('/api/tasks?limit=100', options);
+
+                if (response.status === 401) {
+                    throw new Error('Unauthorized');
+                }
                 if (!response.ok) {
-                    throw new Error('Unable to load todo statistics.');
+                    throw new Error('Failed to fetch todos');
                 }
 
                 const data = await response.json();
                 const todos = data.tasks || [];
+                // Calculate statistics
+                const total = todos.length;
                 const completed = todos.filter((todo) => todo.isCompleted).length;
+                const active = total - completed;
 
-                setStats({
-                    total: todos.length,
-                    completed,
-                    active: todos.length - completed,
-                });
-            } catch {
-                setError('Unable to load todo statistics. Please try again later.');
+                setTodoStats({ total, completed, active });
+            } catch (err) {
+                setError(`Error loading statistics: ${err.message}`);
             } finally {
                 setIsLoading(false);
             }
@@ -62,9 +65,9 @@ export default function ProfilePage() {
             {error && <p>{error}</p>}
             {!isLoading && !error && (
             <ul>
-                <li>Total todos: {stats.total}</li>
-                <li>Completed todos: {stats.completed}</li>
-                <li>Active todos: {stats.active}</li>
+                <li>Total todos: {todoStats.total}</li>
+                <li>Completed todos: {todoStats.completed}</li>
+                <li>Active todos: {todoStats.active}</li>
             </ul>
             )}
         </section>
