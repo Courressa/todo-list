@@ -3,17 +3,21 @@ import {
   todoReducer,
   initialTodoState,
   TODO_ACTIONS,
-} from '../../reducers/todoReducer';
-import { useAuth } from "../../contexts/AuthContext";
-import TodoForm from "./TodoForm";
-import TodoList from "./TodoList/TodoList";
-import SortBy from "../../shared/SortBy";
-import useDebounce from "../../utils/useDebounce";
-import FilterInput from "../../shared/FilterInput";
+} from '../reducers/todoReducer';
+import { useSearchParams } from 'react-router';
+import { useAuth } from "../contexts/AuthContext";
+import TodoForm from "../features/Todos/TodoForm";
+import TodoList from "../features/Todos/TodoList/TodoList";
+import SortBy from "../shared/SortBy";
+import useDebounce from "../utils/useDebounce";
+import FilterInput from "../shared/FilterInput";
+import StatusFilter from "../shared/StatusFilter";
 
 export default function TodosPage() {
     const { token } = useAuth();
+    const [searchParams] = useSearchParams();
     const [state, dispatch] = useReducer(todoReducer, initialTodoState);
+    const statusFilter = searchParams.get('status') || 'all';
     const {
         todoList,
         error,
@@ -199,6 +203,7 @@ export default function TodosPage() {
                 onSortByChange={(value) => dispatch({ type: TODO_ACTIONS.SET_SORT, payload: {field: 'sortBy', value}})}
                 onSortDirectionChange={(value) => dispatch({ type: TODO_ACTIONS.SET_SORT, payload: {field: 'sortDirection', value}})}
             />
+            <StatusFilter />
             <FilterInput
                 filterTerm={filterTerm}
                 onFilterChange={handleFilterChange}
@@ -209,6 +214,7 @@ export default function TodosPage() {
                 onCompleteTodo={completeTodo}
                 onUpdateTodo={updateTodo}
                 dataVersion={dataVersion}
+                statusFilter={statusFilter}
             />
         </div>
     )
