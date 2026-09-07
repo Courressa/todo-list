@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -10,13 +10,15 @@ export default function LoginPage() {
     const [password, setPassword] = useState("");
     const [authError, setAuthError] = useState("");
     const [isLoggingOn, setIsLoggingOn] = useState(false);
+    const hasRedirected = useRef(false);
     
     // Get intended destination from location state, default to /todos
     const from = location.state?.from?.pathname || '/todos';
 
     // Redirect if already authenticated
     useEffect(() => {
-        if (isAuthenticated) {
+        if (isAuthenticated && !hasRedirected.current) {
+            hasRedirected.current = true;
             navigate(from, { replace: true });
         }
     }, [isAuthenticated, navigate, from]);
@@ -30,6 +32,8 @@ export default function LoginPage() {
             const response = await login(email, password);
 
             if (response.success) {
+                hasRedirected.current = true;
+                navigate(from, { replace: true });
                 setIsLoggingOn(false);
             } else {
                 setAuthError(response.error);

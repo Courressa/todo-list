@@ -10,6 +10,8 @@ export default function ProfilePage() {
     useEffect(() => {
         const fetchTodoStats = async () => {
             if (!token) {
+                setTodoStats({ total: 0, completed: 0, active: 0 });
+                setError('');
                 setIsLoading(false);
                 return;
             }
@@ -34,7 +36,16 @@ export default function ProfilePage() {
                 }
 
                 const data = await response.json();
-                const todos = Array.isArray(data) ? data : data.tasks || [];
+                const todos = Array.isArray(data)
+                    ? data
+                    : data && Array.isArray(data.tasks)
+                        ? data.tasks
+                        : null;
+
+                if (!todos) {
+                    throw new Error('Unexpected todo response');
+                }
+
                 // Calculate statistics
                 const total = todos.length;
                 const completed = todos.filter((todo) => todo.isCompleted).length;
