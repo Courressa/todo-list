@@ -76,12 +76,16 @@ export default function ProfilePage() {
             {isLoading && <p>Loading statistics...</p>}
             {error && <p>{error}</p>}
             {!isLoading && !error && (
-            <ul>
-                <li>Total todos: {todoStats.total}</li>
-                <li>Completed todos: {todoStats.completed}</li>
-                <li>Active todos: {todoStats.active}</li>
-                <li>Completion: {todoStats.total > 0 ? Math.round((todoStats.completed / todoStats.total) * 100) : 0}%</li>
-            </ul>
+                todoStats.total === 0 ? (
+                    <p>No todos yet.</p>
+                ) : (
+                    <ul>
+                        <li>Total todos: {todoStats.total}</li>
+                        <li>Completed todos: {todoStats.completed}</li>
+                        <li>Active todos: {todoStats.active}</li>
+                        <li>Completion: {Math.round((todoStats.completed / todoStats.total) * 100)}%</li>
+                    </ul>
+                )
             )}
         </section>
     </div>
