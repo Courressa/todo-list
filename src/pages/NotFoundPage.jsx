@@ -7,7 +7,7 @@ export default function NotFound() {
     <section>
       <h2>404: Not Found</h2>
       <p>{pathname}</p>
-      <Link to="/">Back Home</Link>
+      <Link to="/todos">Back to Todos</Link>
     </section>
   );
 }
