@@ -7,7 +7,12 @@ export default function NotFound() {
     <section>
       <h2>404: Not Found</h2>
       <p>{pathname}</p>
-      <Link to="/todos">Back to Todos</Link>
+      <nav aria-label="Main navigation">
+        <Link to="/">Home</Link>{' | '}
+        <Link to="/todos">Todos</Link>{' | '}
+        <Link to="/about">About</Link>{' | '}
+        <Link to="/profile">Profile</Link>
+      </nav>
     </section>
   );
 }

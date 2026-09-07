@@ -34,7 +34,7 @@ export default function ProfilePage() {
                 }
 
                 const data = await response.json();
-                const todos = data.tasks || [];
+                const todos = Array.isArray(data) ? data : data.tasks || [];
                 // Calculate statistics
                 const total = todos.length;
                 const completed = todos.filter((todo) => todo.isCompleted).length;
@@ -57,6 +57,7 @@ export default function ProfilePage() {
         <section>
             <h3>User Information</h3>
             <p>Name: {email || 'Unknown user'}</p>
+            <p>Status: {todoStats.total > 0 ? Math.round((todoStats.completed / todoStats.total) * 100) : 0}% completed</p>
         </section>
 
         <section>
