@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function ProfilePage() {
-    const { email, token } = useAuth();
+    const { userName, token, isAuthenticated } = useAuth();
     const [todoStats, setTodoStats] = useState({ total: 0, completed: 0, active: 0 });
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
@@ -24,7 +24,7 @@ export default function ProfilePage() {
                     credentials: 'include',
                 };
 
-                const response = await fetch('/api/tasks?limit=100', options);
+                const response = await fetch('/api/tasks', options);
 
                 if (response.status === 401) {
                     throw new Error('Unauthorized');
@@ -56,8 +56,8 @@ export default function ProfilePage() {
         <h2>Profile</h2>
         <section>
             <h3>User Information</h3>
-            <p>Name: {email || 'Unknown user'}</p>
-            <p>Status: {todoStats.total > 0 ? Math.round((todoStats.completed / todoStats.total) * 100) : 0}% completed</p>
+            <p>Name: {userName || 'Unknown user'}</p>
+            <p>Status: {isAuthenticated ? 'Authenticated' : 'Not authenticated'}</p>
         </section>
 
         <section>
@@ -69,6 +69,7 @@ export default function ProfilePage() {
                 <li>Total todos: {todoStats.total}</li>
                 <li>Completed todos: {todoStats.completed}</li>
                 <li>Active todos: {todoStats.active}</li>
+                <li>Completion: {todoStats.total > 0 ? Math.round((todoStats.completed / todoStats.total) * 100) : 0}%</li>
             </ul>
             )}
         </section>

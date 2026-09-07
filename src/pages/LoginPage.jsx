@@ -30,7 +30,6 @@ export default function LoginPage() {
             const response = await login(email, password);
 
             if (response.success) {
-                navigate(from, { replace: true });
                 setIsLoggingOn(false);
             } else {
                 setAuthError(response.error);

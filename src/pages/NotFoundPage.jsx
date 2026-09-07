@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router';
 
-export default function NotFound() {
+export default function NotFoundPage() {
   const { pathname } = useLocation();
 
   return (
