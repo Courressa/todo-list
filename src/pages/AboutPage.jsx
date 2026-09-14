@@ -11,7 +11,7 @@ export default function AboutPage() {
             <h3>Features</h3>
             <List>
                 <Item>Add new tasks</Item>
-                <Item>Edit and delete tasks</Item>
+                <Item>Edit tasks</Item>
                 <Item>Mark tasks as complete</Item>
                 <Item>Navigate between pages</Item>
             </List>
