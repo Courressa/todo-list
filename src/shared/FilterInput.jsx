@@ -1,14 +1,13 @@
+import TextInputWithLabel from './TextInputWithLabel';
+
 export default function FilterInput({filterTerm, onFilterChange }) {
   return (
-    <div>
-        <label htmlFor='filterInput'>Search todos: </label>
-        <input
-            id='filterInput'
-            type='text'
-            value={filterTerm}
-            onChange={(e) => onFilterChange(e.target.value)}
-            placeholder='Search by title...'
-        />
-    </div>
+    <TextInputWithLabel
+      elementId="filterInput"
+      labelText="Search todos"
+      value={filterTerm}
+      onChange={(e) => onFilterChange(e.target.value)}
+      placeholder="Search by title..."
+    />
   )
 }

@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { Page, LoadingRow, Spinner, Alert, EmptyState } from '../shared/Layout';
+import { ListCard, List, Item, Paragraph } from '../shared/Layout';
 
 export default function ProfilePage() {
     const { userName, token, isAuthenticated } = useAuth();
@@ -20,13 +22,19 @@ export default function ProfilePage() {
                 setIsLoading(true);
                 setError('');
 
+                const params = new URLSearchParams({
+                    sortBy: 'createdAt',
+                    sortDirection: 'asc',
+                    limit: 100,
+                });
+
                 const options = {
                     method: 'GET',
                     headers: { 'X-CSRF-TOKEN': token },
                     credentials: 'include',
                 };
 
-                const response = await fetch('/api/tasks', options);
+                const response = await fetch(`/api/tasks?${params}`, options);
 
                 if (response.status === 401) {
                     throw new Error('Unauthorized');
@@ -36,11 +44,7 @@ export default function ProfilePage() {
                 }
 
                 const data = await response.json();
-                const todos = Array.isArray(data)
-                    ? data
-                    : data && Array.isArray(data.tasks)
-                        ? data.tasks
-                        : null;
+                const todos = Array.isArray(data.tasks) ? data.tasks : [];
 
                 if (!todos) {
                     throw new Error('Unexpected todo response');
@@ -53,7 +57,7 @@ export default function ProfilePage() {
 
                 setTodoStats({ total, completed, active });
             } catch (err) {
-                setError(`Error loading statistics: ${err.message}`);
+                setError(`Error loading statistics.`);
             } finally {
                 setIsLoading(false);
             }
@@ -63,31 +67,38 @@ export default function ProfilePage() {
     }, [token]);
 
   return (
-    <div>
+    <Page>
         <h2>Profile</h2>
-        <section>
+        <ListCard>
             <h3>User Information</h3>
-            <p>Name: {userName || 'Unknown user'}</p>
-            <p>Status: {isAuthenticated ? 'Authenticated' : 'Not authenticated'}</p>
-        </section>
+            <Paragraph>Name: {userName || 'Unknown user'}</Paragraph>
+            <Paragraph>Status: {isAuthenticated ? 'Authenticated' : 'Not authenticated'}</Paragraph>
+        </ListCard>
 
-        <section>
+        <ListCard>
             <h3>Todo Statistics</h3>
-            {isLoading && <p>Loading statistics...</p>}
-            {error && <p>{error}</p>}
+            {isLoading && (
+                <LoadingRow role="status">
+                    <Spinner />
+                    <span>Loading statistics...</span>
+                </LoadingRow>
+            )}
+            {error && <Alert $tone="error"><p>{error}</p></Alert>}
             {!isLoading && !error && (
                 todoStats.total === 0 ? (
-                    <p>No todos yet.</p>
+                    <EmptyState>
+                        <p>No todos yet.</p>
+                    </EmptyState>
                 ) : (
-                    <ul>
-                        <li>Total todos: {todoStats.total}</li>
-                        <li>Completed todos: {todoStats.completed}</li>
-                        <li>Active todos: {todoStats.active}</li>
-                        <li>Completion: {Math.round((todoStats.completed / todoStats.total) * 100)}%</li>
-                    </ul>
+                    <List>
+                        <Item>Total todos: {todoStats.total}</Item>
+                        <Item>Completed todos: {todoStats.completed}</Item>
+                        <Item>Active todos: {todoStats.active}</Item>
+                        <Item>Completion: {Math.round((todoStats.completed / todoStats.total) * 100)}%</Item>
+                    </List>
                 )
             )}
-        </section>
-    </div>
+        </ListCard>
+    </Page>
   )
 }

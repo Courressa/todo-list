@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router";
+import Button from "../shared/Button";
+import { Alert } from "../shared/Layout";
 
 export default function Logoff() {
     const { logout } = useAuth();
@@ -18,10 +20,10 @@ export default function Logoff() {
             if (response.success) {
                 navigate("/login");
             } else { 
-                setError(response.error);
+                setError('Unable to log off. Please try again.' );
             }
         } catch (error) {
-            setError(`Error: ${error.name} | ${error.message}`);
+            setError('Unable to log off. Please try again.');
         } finally {
             setIsLoggingOff(false);
         }
@@ -30,13 +32,13 @@ export default function Logoff() {
     return (
         <div>
             {error && (
-                <div>
-                    {error}
-                </div>
+                <Alert $tone="error">
+                    <p>{error}</p>
+                </Alert>
             )}
-            <button onClick={handleLogoff} disabled={isLoggingOff}>
+            <Button $variant="ghost" onClick={handleLogoff} disabled={isLoggingOff}>
                 {isLoggingOff ? "Logging off..." : "Logoff"}
-            </button>
+            </Button>
         </div>
     );
 }

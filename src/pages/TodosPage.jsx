@@ -12,6 +12,8 @@ import SortBy from "../shared/SortBy";
 import useDebounce from "../utils/useDebounce";
 import FilterInput from "../shared/FilterInput";
 import StatusFilter from "../shared/StatusFilter";
+import Button from "../shared/Button";
+import { Page, Alert, LoadingRow, Spinner } from '../shared/Layout';
 
 export default function TodosPage() {
     const { token } = useAuth();
@@ -176,26 +178,31 @@ export default function TodosPage() {
     };
 
     return (
-        <div>
+        <Page>
             {error && (
-                <div>
+                <Alert $tone="error">
                     <p>{typeof error === "string" ? error : error.message}</p>
-                    <button onClick={() => dispatch({ type: TODO_ACTIONS.CLEAR_ERROR, payload: 'error' })}>
+                    <Button onClick={() => dispatch({ type: TODO_ACTIONS.CLEAR_ERROR, payload: 'error' })}>
                         Clear Error
-                    </button>
-                </div>
+                    </Button>
+                </Alert>
             )}
-            {isTodoListLoading && <p>Loading...</p>}
+            {isTodoListLoading && (
+                <LoadingRow role="status">
+                    <Spinner />
+                    <span>Loading todos...</span>
+                </LoadingRow>
+            )}
             {filterError && (
-                <div>
+                <Alert $tone="error">
                     <p>{typeof filterError === "string" ? filterError : filterError.message}</p>
-                    <button onClick={() => dispatch({ type: TODO_ACTIONS.CLEAR_ERROR, payload: 'filterError' })}>
+                    <Button onClick={() => dispatch({ type: TODO_ACTIONS.CLEAR_ERROR, payload: 'filterError' })}>
                         Clear Filter Error
-                    </button>
-                    <button onClick={() => {dispatch({ type: TODO_ACTIONS.RESET_FILTERS})}}>
+                    </Button>
+                    <Button onClick={() => {dispatch({ type: TODO_ACTIONS.RESET_FILTERS})}}>
                         Reset Filters
-                    </button>
-                </div>
+                    </Button>
+                </Alert>
             )}
             <SortBy
                 sortBy={sortBy}
@@ -209,13 +216,15 @@ export default function TodosPage() {
                 onFilterChange={handleFilterChange}
             />
             <TodoForm onAddTodo={addTodo} />
-            <TodoList
-                todoList={todoList}
-                onCompleteTodo={completeTodo}
-                onUpdateTodo={updateTodo}
-                dataVersion={dataVersion}
-                statusFilter={statusFilter}
-            />
-        </div>
+            {(!isTodoListLoading || todoList.length > 0) && (
+                <TodoList
+                    todoList={todoList}
+                    onCompleteTodo={completeTodo}
+                    onUpdateTodo={updateTodo}
+                    dataVersion={dataVersion}
+                    statusFilter={statusFilter}
+                />
+            )}
+        </Page>
     )
 }
