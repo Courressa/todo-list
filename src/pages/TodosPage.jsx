@@ -76,10 +76,9 @@ export default function TodosPage() {
     }, [token, sortBy, sortDirection, debouncedFilterTerm]);
 
     const addTodo = async (todoTitle) => {
-        // Temporary todo
+        // Show a temporary todo immediately; replace or remove it after the API responds.
         const newTodo = {id: Date.now(), title: todoTitle, isCompleted: false };
 
-        // Obtimistically update the UI immediately
         dispatch({ type: TODO_ACTIONS.ADD_TODO_START, payload: newTodo });
 
         try {
@@ -100,22 +99,19 @@ export default function TodosPage() {
                 throw new Error("Failed to add todo");
             }
 
-            // On success: replace the temporary todo with the real todo from the server response
             const realTodo = await response.json();
 
             dispatch({ type: TODO_ACTIONS.ADD_TODO_SUCCESS, payload: {newTodoId: newTodo.id, realTodo} });
         } catch (err) {
-            // On failure: remove the failed todo from the list and set an error message
             dispatch({ type: TODO_ACTIONS.ADD_TODO_ERROR, payload: {newTodoId: newTodo.id, message: err.message} });
         }
         
     };
 
     const completeTodo = async (id) => {
-        // Store the original todo before making changes (for potential rollback)
+        // Update the UI first; restore originalTodo if the API fails.
         const originalTodo = todoList.find(todo => todo.id === id);
 
-        // Optimistically update the todo as completed in state
         dispatch({ type: TODO_ACTIONS.COMPLETE_TODO_START, payload: id });
 
         try {
@@ -135,20 +131,17 @@ export default function TodosPage() {
                 throw new Error("Failed to mark as completed");
             }
 
-            // On success: reconcile the optimistic state with the server's version of the todo
             const updatedTodo = await response.json();
             dispatch({ type: TODO_ACTIONS.COMPLETE_TODO_SUCCESS, payload: { id, updatedTodo } });
         } catch (err) {
-            // On failure: rollback to the original todo and set error message
             dispatch({ type: TODO_ACTIONS.COMPLETE_TODO_ERROR, payload: { id, originalTodo, message: err.message } });
         }
     };
 
     const updateTodo = async (editedTodo) => {
-        // Store the original todo for rollback
+        // Apply the edit immediately; restore originalTodo if the API fails.
         const originalTodo = todoList.find(todo => todo.id === editedTodo.id);
 
-        // Optimistically apply the edited todo to state
         dispatch({ type: TODO_ACTIONS.UPDATE_TODO_START, payload: { editedTodo } });
         try {
             const response = await fetch(`/api/tasks/${editedTodo.id}`, {
@@ -168,11 +161,9 @@ export default function TodosPage() {
                 throw new Error("Failed to update todo");
             }
 
-            // On success: reconcile the optimistic state with the server's version of the todo
             const updatedTodo = await response.json();
             dispatch({ type: TODO_ACTIONS.UPDATE_TODO_SUCCESS, payload: { editedTodoId: editedTodo.id, updatedTodo } });
         } catch (err) {
-            // On failure: rollback to the original todo and set error message
             dispatch({ type: TODO_ACTIONS.UPDATE_TODO_ERROR, payload: { editedTodoId: editedTodo.id, originalTodo, message: err.message } });
         }
     };

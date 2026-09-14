@@ -50,7 +50,6 @@ export default function ProfilePage() {
                     throw new Error('Unexpected todo response');
                 }
 
-                // Calculate statistics
                 const total = todos.length;
                 const completed = todos.filter((todo) => todo.isCompleted).length;
                 const active = total - completed;
