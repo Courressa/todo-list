@@ -57,7 +57,7 @@ This is a ToDo web application that allows users to save and view a list of task
 I chose to use styled-components because it was a different styling method that I wanted to learn which seemed like the next step after CSS Modules. It supports CSS in Javascript with component-scoped styles and dynamic theming and also eliminates unused CSS which was why I chose to learn and implement this option. I used a theme object (primary / accent / etc.) and props like $variant and $completed so styles stay consistent.
 
 ## ⌛Future Improvements⌛
-- Adding option to delete todos
+- Adding pagination
 - Adding dark mode
 - Adding unit tests
 
