@@ -59,7 +59,7 @@ I chose to use styled-components because it was a different styling method that 
 ## ⌛Future Improvements⌛
 - Adding option to delete todos
 - Adding dark mode
-- Deploying
+- Adding unit tests
 
 ## 📄License📄
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
