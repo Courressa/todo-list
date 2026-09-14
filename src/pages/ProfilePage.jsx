@@ -22,13 +22,19 @@ export default function ProfilePage() {
                 setIsLoading(true);
                 setError('');
 
+                const params = new URLSearchParams({
+                    sortBy: 'createdAt',
+                    sortDirection: 'asc',
+                    limit: 100,
+                });
+
                 const options = {
                     method: 'GET',
                     headers: { 'X-CSRF-TOKEN': token },
                     credentials: 'include',
                 };
 
-                const response = await fetch('/api/tasks', options);
+                const response = await fetch(`/api/tasks?${params}`, options);
 
                 if (response.status === 401) {
                     throw new Error('Unauthorized');
@@ -38,11 +44,7 @@ export default function ProfilePage() {
                 }
 
                 const data = await response.json();
-                const todos = Array.isArray(data)
-                    ? data
-                    : data && Array.isArray(data.tasks)
-                        ? data.tasks
-                        : null;
+                const todos = Array.isArray(data.tasks) ? data.tasks : [];
 
                 if (!todos) {
                     throw new Error('Unexpected todo response');
