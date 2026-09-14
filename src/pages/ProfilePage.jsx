@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { Page, LoadingRow, Spinner, Alert, EmptyState } from '../shared/Layout';
 
 export default function ProfilePage() {
     const { userName, token, isAuthenticated } = useAuth();
@@ -63,7 +64,7 @@ export default function ProfilePage() {
     }, [token]);
 
   return (
-    <div>
+    <Page>
         <h2>Profile</h2>
         <section>
             <h3>User Information</h3>
@@ -73,11 +74,18 @@ export default function ProfilePage() {
 
         <section>
             <h3>Todo Statistics</h3>
-            {isLoading && <p>Loading statistics...</p>}
-            {error && <p>{error}</p>}
+            {isLoading && (
+                <LoadingRow role="status">
+                    <Spinner />
+                    <span>Loading statistics...</span>
+                </LoadingRow>
+            )}
+            {error && <Alert $tone="error">{error}</Alert>}
             {!isLoading && !error && (
                 todoStats.total === 0 ? (
-                    <p>No todos yet.</p>
+                    <EmptyState>
+                        <p>No todos yet.</p>
+                    </EmptyState>
                 ) : (
                     <ul>
                         <li>Total todos: {todoStats.total}</li>
@@ -88,6 +96,6 @@ export default function ProfilePage() {
                 )
             )}
         </section>
-    </div>
+    </Page>
   )
 }

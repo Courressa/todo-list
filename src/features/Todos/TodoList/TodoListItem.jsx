@@ -1,6 +1,79 @@
 import TextInputWithLabel from "../../../shared/TextInputWithLabel";
 import { isValidTodoTitle } from "../../../utils/todoValidation";
 import { useEditableTitle } from "../../../hooks/useEditableTitle";
+import Button from "../../../shared/Button";
+import styled from "styled-components";
+
+const Item = styled.li`
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+
+  &:last-child {
+    border-bottom: 0;
+  }
+`;
+
+const ItemForm = styled.form`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  min-height: 56px;
+`;
+
+const CheckLabel = styled.label`
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+`;
+
+const Checkbox = styled.input.attrs({ type: 'checkbox' })`
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  border: 2px solid ${({ theme }) => theme.colors.primary};
+  border-radius: 6px;
+  background: ${({ theme }) => theme.colors.surface};
+  cursor: pointer;
+  position: relative;
+
+  &:checked {
+    background: ${({ theme }) => theme.colors.primary};
+    border-color: ${({ theme }) => theme.colors.primary};
+  }
+
+  &:checked::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 6px;
+    height: 11px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  &:focus-visible {
+    outline: 3px solid ${({ theme }) => theme.colors.focusRing};
+    outline-offset: 2px;
+  }
+`;
+
+const Title = styled.span`
+  flex: 1;
+  min-width: 0;
+  word-break: break-word;
+  cursor: pointer;
+  padding: 0.4rem 0;
+  color: ${({ $completed, theme }) => $completed ? theme.colors.muted : theme.colors.ink};
+  text-decoration: ${({ $completed }) => $completed ? 'line-through' : 'none'};
+`;
 
 function TodoListItem({todo, onCompleteTodo, onUpdateTodo}) {
   const {
@@ -30,8 +103,8 @@ function TodoListItem({todo, onCompleteTodo, onUpdateTodo}) {
   };
 
   return (
-    <li>
-      <form onSubmit={handleUpdate}>
+    <Item>
+      <ItemForm onSubmit={handleUpdate}>
         { isEditing ? (
           <>
             <TextInputWithLabel
@@ -41,30 +114,31 @@ function TodoListItem({todo, onCompleteTodo, onUpdateTodo}) {
               ref={inputRef}
               value={workingTitle}
             />
-            <button type="button" onClick={handleCancel}>Cancel</button>
-            <button
+            <Button $variant="ghost" type="button" onClick={handleCancel}>Cancel</Button>
+            <Button
               type="button"
               onClick={handleUpdate}
               disabled={!isValidTodoTitle(workingTitle)}
             >
               Update
-            </button>
+            </Button>
           </>
         ) : (
           <>
-            <label>
-              <input
-                type="checkbox"
+            <CheckLabel htmlFor={`checkbox${todo.id}`}>
+              <Checkbox
                 id={`checkbox${todo.id}`}
                 checked={todo.isCompleted}
                 onChange={() => onCompleteTodo(todo.id)}
               />
-            </label>
-            <span onClick={() => startEditing()}>{todo.title}</span>
+            </CheckLabel>
+            <Title $completed={todo.isCompleted} onClick={() => startEditing()}>
+              {todo.title}
+            </Title>
           </>
         )}
-      </form>
-    </li>
+      </ItemForm>
+    </Item>
   )
 }
 

@@ -1,6 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { useAuth } from '../contexts/AuthContext';
+import Button from '../shared/Button';
+import { Page, Alert } from '../shared/Layout';
+import { Field, Label, Input } from '../shared/TextInputWithLabel';
+import styled from 'styled-components';
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 24rem;
+`;
 
 export default function LoginPage() {
     const { login, isAuthenticated } = useAuth();
@@ -45,39 +56,41 @@ export default function LoginPage() {
         } 
     }
     return (
-        <form onSubmit={handleSubmit}>
-            {authError && (
-                <div>
-                    {authError}
-                </div>
-            )}
-            <label htmlFor="email">Email</label>
-            <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={event => {setEmail(event.target.value)}}
+        <Page>
+            <Form onSubmit={handleSubmit}>
+                {authError && (
+                    <Alert $tone="error">
+                        <p>{authError}</p>
+                    </Alert>
+                )}
+                <Field>
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                        id="email"
+                        type="email"
+                        value={email}
+                        onChange={event => {setEmail(event.target.value)}}
 
-            />
-
-            <label htmlFor="password">Password</label>
-            <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={event => {setPassword(event.target.value)}}
-            />
-
-            <button 
-                type="submit"
-                disabled={isLoggingOn}
-            >
-                {
-                    isLoggingOn ?
-                    "Logging in..." :
-                    "Log On"
-                }
-            </button>
-        </form>
+                    />
+                </Field>
+                <Field>
+                    <Label htmlFor="password">Password</Label>
+                    <Input
+                        id="password"
+                        type="password"
+                        value={password}
+                        onChange={event => {setPassword(event.target.value)}}
+                    />
+                </Field>
+                <Button disabled={isLoggingOn}>
+                    {
+                        isLoggingOn ?
+                        "Logging in..." :
+                        "Log On"
+                    }
+                </Button>
+                
+            </Form>
+        </Page>
     )
 }

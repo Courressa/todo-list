@@ -1,6 +1,8 @@
+import { Page } from '../shared/Layout';
+
 export default function AboutPage() {
   return (
-    <div>
+    <Page>
         <h2>About</h2>
         <section>
             <p>This is a simple informational component about the todo list application.</p>
@@ -21,7 +23,7 @@ export default function AboutPage() {
                 <li>Vite for development and build tooling</li>
             </ul>
         </section>
-    </div>
+    </Page>
     
   )
 }

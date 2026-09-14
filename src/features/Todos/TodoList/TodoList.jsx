@@ -1,5 +1,21 @@
 import TodoListItem from "./TodoListItem";
 import { useMemo } from "react";
+import styled from 'styled-components';
+import { EmptyState } from "../../../shared/Layout";
+
+const ListCard = styled.section`
+  background: ${({ theme }) => theme.colors.surface};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: 18px;
+  overflow: hidden;
+  margin-top: 1rem;
+`;
+
+const List = styled.ul`
+  list-style: none;
+  margin: 0;
+  padding: 0;
+`;
 
 function TodoList({todoList, onCompleteTodo, onUpdateTodo, dataVersion, statusFilter = 'all' }) {
     const filteredTodoList = useMemo(() => {
@@ -37,18 +53,22 @@ function TodoList({todoList, onCompleteTodo, onUpdateTodo, dataVersion, statusFi
   };
 
   return filteredTodoList.todos.length === 0 ? (
-    <p>{getEmptyMessage()}</p>
+    <EmptyState>
+        <p>{getEmptyMessage()}</p>
+    </EmptyState>
   ) : (
-    <ul>
-        {filteredTodoList.todos.map((todo) => (
-            <TodoListItem
-                key={todo.id}
-                todo={todo}
-                onCompleteTodo={onCompleteTodo}
-                onUpdateTodo={onUpdateTodo}
-            />
-        ))}
-    </ul>
+    <ListCard>
+        <List>
+            {filteredTodoList.todos.map((todo) => (
+                <TodoListItem
+                    key={todo.id}
+                    todo={todo}
+                    onCompleteTodo={onCompleteTodo}
+                    onUpdateTodo={onUpdateTodo}
+                />
+            ))}
+        </List>
+    </ListCard>
   );
 }
 

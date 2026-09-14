@@ -1,10 +1,11 @@
 import { Link, useLocation } from 'react-router';
+import { Page } from '../shared/Layout';
 
 export default function NotFoundPage() {
   const { pathname } = useLocation();
 
   return (
-    <section>
+    <Page>
       <h2>404: Not Found</h2>
       <p>{pathname}</p>
       <nav aria-label="Main navigation">
@@ -13,6 +14,6 @@ export default function NotFoundPage() {
         <Link to="/about">About</Link>{' | '}
         <Link to="/profile">Profile</Link>
       </nav>
-    </section>
+    </Page>
   );
 }
