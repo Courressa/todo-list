@@ -1,9 +1,7 @@
 import { createContext, useContext, useState } from 'react';
 
-// Create the context
 const AuthContext = createContext();
 
-// Custom hook with error checking
 export function useAuth() {
     const context = useContext(AuthContext);
     if (!context) {
@@ -13,11 +11,9 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-    // State for authentication
     const [userName, setUserName] = useState('');
     const [token, setToken] = useState('');
-    
-    // Functions will go here...
+
     const login = async (userEmail, password) => {
         try {
             const options = {
@@ -31,12 +27,10 @@ export function AuthProvider({ children }) {
             const data = await res.json();
             
             if (res.status === 200 && data.name && data.csrfToken) {
-                // Success: Update state
                 setUserName(data.name);
                 setToken(data.csrfToken);
                 return { success: true };
             } else {
-                // Failure: Return error
                 return {
                     success: false,
                     error: `Authentication failed: ${data?.message}`,
@@ -67,12 +61,12 @@ export function AuthProvider({ children }) {
 
             const res = await fetch('/api/users/logoff', options);
 
-            // Body may be empty on logoff, so don't assume it's valid JSON
+            // Logoff may return an empty body, so JSON parsing can fail.
             let data = {};
             try {
                 data = await res.json();
             } catch {
-                // No JSON body to parse, ignore
+                data = {};
             }
 
             if (res.status === 200) {
@@ -89,13 +83,12 @@ export function AuthProvider({ children }) {
                 error: 'Network error during logout',
             };
         } finally {
-            // Clear local state regardless of server response
+            // Always clear local session, even if the server logoff fails.
             setUserName('');
             setToken('');
         }
     };
-    
-    // Context value object
+
     const value = {
         userName,
         token,
