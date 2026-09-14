@@ -4,11 +4,20 @@ import styled from 'styled-components';
 const TabList = styled.div`
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.35rem;
   padding: 0.25rem;
   background: ${({ theme }) => theme.colors.surface};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: 12px;
+  width: 100%;
+  margin: 0.75rem 0;
+
+  @media (min-width: ${({ theme }) => theme.bp.tablet}) {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+  }
 `;
 
 const Tab = styled.button`

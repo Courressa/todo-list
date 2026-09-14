@@ -11,6 +11,7 @@ const Form = styled.form`
   flex-direction: column;
   gap: 1rem;
   max-width: 24rem;
+  justify-self: center;
 `;
 
 export default function LoginPage() {
@@ -82,7 +83,7 @@ export default function LoginPage() {
                         onChange={event => {setPassword(event.target.value)}}
                     />
                 </Field>
-                <Button disabled={isLoggingOn}>
+                <Button type="submit" disabled={isLoggingOn}>
                     {
                         isLoggingOn ?
                         "Logging in..." :

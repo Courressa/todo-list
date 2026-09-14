@@ -5,6 +5,7 @@ import styled from 'styled-components';
 const List = styled.ul`
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 0.25rem;
     list-style: none;
     margin: 0;

@@ -22,6 +22,7 @@ export const Input = styled.input`
   color: ${({ theme }) => theme.colors.ink};
   font: inherit;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  width: 100%;
 
   &:hover:not(:disabled) {
     border-color: ${({ theme }) => theme.colors.primary};
@@ -50,6 +51,11 @@ export const Select = styled.select`
     outline: none;
     border-color: ${({ theme }) => theme.colors.primary};
     box-shadow: 0 0 0 3px ${({ theme }) => theme.colors.focusRing};
+  }
+
+  @media (max-width: 479px) {
+    width: 100%;
+    min-width: 0;
   }
 `;
 

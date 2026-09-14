@@ -15,6 +15,10 @@ export const Page = styled.div`
   width: min(760px, calc(100% - 2rem));
   margin: 0 auto;
   padding: 1.5rem 0 3.5rem;
+
+  @media (min-width: ${({ theme }) => theme.bp.tablet}) {
+    padding: 2.25rem 0 4.5rem;
+  }
 `;
 
 export const Alert = styled.div`
@@ -70,4 +74,27 @@ export const EmptyState = styled.div`
     margin: 0 auto;
     max-width: 36ch;
   }
+`;
+
+export const ListCard = styled.section`
+    background: ${({ theme }) => theme.colors.surface};
+    border: 1px solid ${({ theme }) => theme.colors.border};
+    border-radius: 18px;
+    overflow: hidden;
+    margin-top: 2rem;
+    padding: 1rem 1.5rem;
+`;
+
+export const List = styled.ul`
+    list-style: square;
+    margin: 0;
+    padding-left: 1.2rem;
+`;
+
+export const Item = styled.li`
+    margin: 0.35rem 1rem;
+`;
+
+export const Paragraph = styled.p`
+  margin: 0.5rem 1rem;
 `;

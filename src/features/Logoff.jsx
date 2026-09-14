@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router";
 import Button from "../shared/Button";
+import { Alert } from "../shared/Layout";
 
 export default function Logoff() {
     const { logout } = useAuth();
@@ -31,9 +32,9 @@ export default function Logoff() {
     return (
         <div>
             {error && (
-                <div>
-                    {error}
-                </div>
+                <Alert $tone="error">
+                    <p>{error}</p>
+                </Alert>
             )}
             <Button $variant="ghost" onClick={handleLogoff} disabled={isLoggingOff}>
                 {isLoggingOff ? "Logging off..." : "Logoff"}

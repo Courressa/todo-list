@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Page, LoadingRow, Spinner, Alert, EmptyState } from '../shared/Layout';
+import { ListCard, List, Item, Paragraph } from '../shared/Layout';
 
 export default function ProfilePage() {
     const { userName, token, isAuthenticated } = useAuth();
@@ -66,13 +67,13 @@ export default function ProfilePage() {
   return (
     <Page>
         <h2>Profile</h2>
-        <section>
+        <ListCard>
             <h3>User Information</h3>
-            <p>Name: {userName || 'Unknown user'}</p>
-            <p>Status: {isAuthenticated ? 'Authenticated' : 'Not authenticated'}</p>
-        </section>
+            <Paragraph>Name: {userName || 'Unknown user'}</Paragraph>
+            <Paragraph>Status: {isAuthenticated ? 'Authenticated' : 'Not authenticated'}</Paragraph>
+        </ListCard>
 
-        <section>
+        <ListCard>
             <h3>Todo Statistics</h3>
             {isLoading && (
                 <LoadingRow role="status">
@@ -80,22 +81,22 @@ export default function ProfilePage() {
                     <span>Loading statistics...</span>
                 </LoadingRow>
             )}
-            {error && <Alert $tone="error">{error}</Alert>}
+            {error && <Alert $tone="error"><p>{error}</p></Alert>}
             {!isLoading && !error && (
                 todoStats.total === 0 ? (
                     <EmptyState>
                         <p>No todos yet.</p>
                     </EmptyState>
                 ) : (
-                    <ul>
-                        <li>Total todos: {todoStats.total}</li>
-                        <li>Completed todos: {todoStats.completed}</li>
-                        <li>Active todos: {todoStats.active}</li>
-                        <li>Completion: {Math.round((todoStats.completed / todoStats.total) * 100)}%</li>
-                    </ul>
+                    <List>
+                        <Item>Total todos: {todoStats.total}</Item>
+                        <Item>Completed todos: {todoStats.completed}</Item>
+                        <Item>Active todos: {todoStats.active}</Item>
+                        <Item>Completion: {Math.round((todoStats.completed / todoStats.total) * 100)}%</Item>
+                    </List>
                 )
             )}
-        </section>
+        </ListCard>
     </Page>
   )
 }

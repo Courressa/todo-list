@@ -18,4 +18,12 @@ export const GlobalStyle = createGlobalStyle`
     h1, h2, h3 {
         font-family: ${({ theme }) => theme.fonts.display};
     }
+
+    h2 {
+        margin: 0 0 1rem;
+    }
+
+    h3 {
+        margin: 1rem 0 0.5rem;
+    }
 `;

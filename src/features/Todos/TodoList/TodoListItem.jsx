@@ -15,7 +15,7 @@ const Item = styled.li`
 const ItemForm = styled.form`
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: ${({ $editing }) => ($editing ? 'flex-end' : 'center')};
   gap: 0.5rem;
   padding: 0.35rem 0.75rem;
   min-height: 56px;
@@ -75,6 +75,27 @@ const Title = styled.span`
   text-decoration: ${({ $completed }) => $completed ? 'line-through' : 'none'};
 `;
 
+const EditField = styled.div`
+  flex: 1 1 100%;
+  min-width: 0;
+
+  @media (min-width: ${({ theme }) => theme.bp.tablet}) {
+    flex: 1 1 0;
+  }
+`;
+
+const Actions = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+
+  @media (min-width: ${({ theme }) => theme.bp.tablet}) {
+    width: auto;
+    justify-content: flex-start;
+  }
+`;
+
 function TodoListItem({todo, onCompleteTodo, onUpdateTodo}) {
   const {
     isEditing,
@@ -104,24 +125,28 @@ function TodoListItem({todo, onCompleteTodo, onUpdateTodo}) {
 
   return (
     <Item>
-      <ItemForm onSubmit={handleUpdate}>
+      <ItemForm $editing={isEditing} onSubmit={handleUpdate}>
         { isEditing ? (
           <>
-            <TextInputWithLabel
-              elementId={"todoTitle"}
-              labelText={"Todo"}
-              onChange={handleEdit}
-              ref={inputRef}
-              value={workingTitle}
-            />
-            <Button $variant="ghost" type="button" onClick={handleCancel}>Cancel</Button>
-            <Button
-              type="button"
-              onClick={handleUpdate}
-              disabled={!isValidTodoTitle(workingTitle)}
-            >
-              Update
-            </Button>
+            <EditField>
+              <TextInputWithLabel
+                elementId={"todoTitle"}
+                labelText={"Todo"}
+                onChange={handleEdit}
+                ref={inputRef}
+                value={workingTitle}
+              />
+            </EditField>
+            <Actions>
+              <Button $variant="ghost" type="button" onClick={handleCancel}>Cancel</Button>
+              <Button
+                type="button"
+                onClick={handleUpdate}
+                disabled={!isValidTodoTitle(workingTitle)}
+              >
+                Update
+              </Button>
+            </Actions>
           </>
         ) : (
           <>
