@@ -55,7 +55,7 @@ export default function ProfilePage() {
 
                 setTodoStats({ total, completed, active });
             } catch (err) {
-                setError(`Error loading statistics: ${err.message}`);
+                setError(`Error loading statistics.`);
             } finally {
                 setIsLoading(false);
             }

@@ -3,6 +3,7 @@ import TextInputWithLabel from "../../shared/TextInputWithLabel";
 import { isValidTodoTitle } from "../../utils/todoValidation";
 import Button from "../../shared/Button";
 import styled from "styled-components";
+import { TODO_TITLE_MAX } from "../../utils/todoValidation";
 
 const Form = styled.form`
   display: flex;
@@ -19,11 +20,11 @@ function TodoForm({ onAddTodo }) {
     const handleAddTodo = (event) => {
         event.preventDefault();
 
-        if (workingTodoTitle && workingTodoTitle !== "") {
-            onAddTodo(workingTodoTitle);
-            setWorkingTodoTitle("");
-            inputRef.current.focus();
-        }
+        if (!isValidTodoTitle(workingTodoTitle)) return;
+
+        onAddTodo(workingTodoTitle.trim());
+        setWorkingTodoTitle("");
+        inputRef.current.focus();
     }
 
     return (
@@ -34,7 +35,8 @@ function TodoForm({ onAddTodo }) {
                 onChange={event => setWorkingTodoTitle(event.target.value)}
                 elementId={"todoTitle"}
                 labelText={"Todo"}
-            />
+                maxLength={TODO_TITLE_MAX}
+            />  
             <Button type="submit" disabled={!isValidTodoTitle(workingTodoTitle)}>Add Todo</Button>
         </Form>
     );

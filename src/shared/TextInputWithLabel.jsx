@@ -66,6 +66,7 @@ export default function TextInputWithLabel({
     ref,
     value,
     placeholder,
+    maxLength
 }) {
   return (
     <Field>
@@ -77,6 +78,7 @@ export default function TextInputWithLabel({
             value={value}
             onChange={onChange}
             placeholder={placeholder ? placeholder : ""}
+            maxLength={maxLength}
         />
     </Field>
   )

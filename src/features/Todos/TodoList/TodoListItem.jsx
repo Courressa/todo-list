@@ -3,6 +3,7 @@ import { isValidTodoTitle } from "../../../utils/todoValidation";
 import { useEditableTitle } from "../../../hooks/useEditableTitle";
 import Button from "../../../shared/Button";
 import styled from "styled-components";
+import { TODO_TITLE_MAX } from "../../../utils/todoValidation";
 
 const Item = styled.li`
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};
@@ -135,6 +136,7 @@ function TodoListItem({todo, onCompleteTodo, onUpdateTodo}) {
                 onChange={handleEdit}
                 ref={inputRef}
                 value={workingTitle}
+                maxLength={TODO_TITLE_MAX}
               />
             </EditField>
             <Actions>

@@ -20,10 +20,10 @@ export default function Logoff() {
             if (response.success) {
                 navigate("/login");
             } else { 
-                setError(response.error);
+                setError('Unable to log off. Please try again.' );
             }
         } catch (error) {
-            setError(`Error: ${error.name} | ${error.message}`);
+            setError('Unable to log off. Please try again.');
         } finally {
             setIsLoggingOff(false);
         }
