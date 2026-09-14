@@ -14,7 +14,7 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
     // State for authentication
-    const [email, setEmail] = useState('');
+    const [userName, setUserName] = useState('');
     const [token, setToken] = useState('');
     
     // Functions will go here...
@@ -32,7 +32,7 @@ export function AuthProvider({ children }) {
             
             if (res.status === 200 && data.name && data.csrfToken) {
                 // Success: Update state
-                setEmail(data.name);
+                setUserName(data.name);
                 setToken(data.csrfToken);
                 return { success: true };
             } else {
@@ -53,7 +53,7 @@ export function AuthProvider({ children }) {
     const logout = async () => {
         // No token means already logged out locally, skip the server call
         if (!token) {
-            setEmail('');
+            setUserName('');
             setToken('');
             return { success: true };
         }
@@ -90,14 +90,14 @@ export function AuthProvider({ children }) {
             };
         } finally {
             // Clear local state regardless of server response
-            setEmail('');
+            setUserName('');
             setToken('');
         }
     };
     
     // Context value object
     const value = {
-        email,
+        userName,
         token,
         isAuthenticated: !!token,
         login,
