@@ -5,7 +5,7 @@ export default function AboutPage() {
     <Page>
         <h2>About</h2>
         <ListCard>
-            <Paragraph>This is a simple informational component about the todo list application.</Paragraph>
+            <Paragraph>This is a todo web application with login, filters, search, and a profile area that shows your task stats.</Paragraph>
             <Paragraph>Use the app to organize tasks, track progress, and keep up with your to-do list.</Paragraph>
 
             <h3>Features</h3>
